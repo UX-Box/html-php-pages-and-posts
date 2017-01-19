@@ -28,11 +28,11 @@ if (!class_exists("CustomPagesAndPosts")) {
 
             global $post;
 
-            $file = wp_upload_dir()['basedir'] . '/' . get_post_meta($post->ID, 'agadyn_custom_template_path', true);
+            $file = wp_upload_dir()['basedir'] . '/' . get_post_meta($post->ID, '_agadyn_custom_template_path', true);
 
             if (is_file($file)){
 
-                $options = get_post_meta($post->ID, 'agadyn_custom_template_options', true);
+                $options = get_post_meta($post->ID, '_agadyn_custom_template_options', true);
 
                 switch ($options) {
 
@@ -41,19 +41,31 @@ if (!class_exists("CustomPagesAndPosts")) {
                         break;
 
                     case 'overwrite_content':
-                        $post->post_content = file_get_contents($file);
+                        $post->post_content = '[html_php_page_post]';
                         break;
 
                     case 'below_content':
-                        $post->post_content .= file_get_contents($file);
+                        $post->post_content .= '[html_php_page_post]';
                         break;
 
                     case 'above_content':
-                        $post->post_content = file_get_contents($file).$post->post_content;
+                        $post->post_content = '[html_php_page_post]'.$post->post_content;
                         break;
                 }
             }
             return $single_template;
+        }
+
+        public function shortcode_parser( $atts, $content = null ) {
+
+            global $post;
+            $file = wp_upload_dir()['basedir'] . '/' . get_post_meta($post->ID, '_agadyn_custom_template_path', true);
+            if (is_file($file)){
+                // return file_get_contents($file);
+                ob_start();
+                    require_once $file;
+                return ob_get_clean();
+            }
         }
 
         public function add_custom_meta_box(){
@@ -69,7 +81,7 @@ if (!class_exists("CustomPagesAndPosts")) {
 
         public function custom_meta_box_markup($object) {
 
-            $template_post_id = get_post_meta($object->ID, "agadyn_custom_template_id", true);
+            $template_post_id = get_post_meta($object->ID, "_agadyn_custom_template_id", true);
 
             if (!$template_post_id) $template_post_id = 0;
 
@@ -101,7 +113,7 @@ if (!class_exists("CustomPagesAndPosts")) {
 
                             foreach($option_values as $key => $value) 
                             {
-                                if($key == get_post_meta($object->ID, "agadyn_custom_template_options", true))
+                                if($key == get_post_meta($object->ID, "_agadyn_custom_template_options", true))
                                 {
                                     ?>
                                         <option value="<?php echo $key?>" selected><?php echo $value; ?></option>
@@ -192,14 +204,14 @@ if (!class_exists("CustomPagesAndPosts")) {
                 $agadyn_custom_template_id = $_POST["agadyn_custom_template_id"];
                 $agadyn_custom_template_path = get_post_meta( $_POST["agadyn_custom_template_id"], '_wp_attached_file', true );
             }   
-            update_post_meta($post_id, "agadyn_custom_template_id", $agadyn_custom_template_id);
-            update_post_meta($post_id, "agadyn_custom_template_path", $agadyn_custom_template_path);
+            update_post_meta($post_id, "_agadyn_custom_template_id", $agadyn_custom_template_id);
+            update_post_meta($post_id, "_agadyn_custom_template_path", $agadyn_custom_template_path);
 
             if(isset($_POST["agadyn_custom_template_options"]))
             {
                 $agadyn_custom_template_options = $_POST["agadyn_custom_template_options"];
             }   
-            update_post_meta($post_id, "agadyn_custom_template_options", $agadyn_custom_template_options);
+            update_post_meta($post_id, "_agadyn_custom_template_options", $agadyn_custom_template_options);
         }
     } // end class 
     
@@ -210,9 +222,11 @@ $class = new CustomPagesAndPosts();
 
 if (isset($class)) {
 
-    add_filter( 'mime_types', array($class, 'custom_upload_mimes' ));
-    add_filter( 'single_template', array($class, 'load_custom_template' ));
+    add_filter( 'mime_types', array($class, 'custom_upload_mimes' ), 1);
+    add_filter( 'single_template', array($class, 'load_custom_template' ), 111, 1);
+    add_filter( 'template_include', array($class, 'load_custom_template' ), 111, 1);
     add_filter( 'add_meta_boxes', array($class, 'add_custom_meta_box' ));
-    add_action( 'save_post', array($class, 'save_custom_meta_box' ), 10, 2);   
+    add_action( 'save_post', array($class, 'save_custom_meta_box' ), 10, 2);       
+    add_shortcode( 'html_php_page_post', array($class, 'shortcode_parser' )); 
 
 }

@@ -15,16 +15,14 @@ Use your HTML or PHP files for any page or post.
 This plugin allows you to use any HTML or PHP file as the template for any page or post. 
 
 Simply upload the file and select it. 
-You can upload custom js and css files into the media library and call them from the HTML file.
+You can upload custom js and css files into the media library and link to them from the HTML file.
 
 Options:
 
 * Overwrite All: You overwrite the entire theme and use your custom file
 * Overwrite Content: Keeps the header, footer, sidebar, e.t.c. Simply overwrites the body of the page or post
 * Above Content: Your custom content is simply added to the top of the page content
-*Below Content: You custom content is placed just beneath the page content.
-
-NOTE: PHP code will only run properly when using the "Overwrite All" option.
+* Below Content: You custom content is placed just beneath the page content.
 
 == Installation ==
 
@@ -40,8 +38,8 @@ e.g. `<link rel='stylesheet' href='http://example.com/wp-content/2017/01/my_cust
 
 = Will template tags work in my custom templates? =
 
-Only if you are using the "Overwrite All" option. 
-Php code will not run properly if you are overwriting the body of a post or page.
+Yes.
+All wordpress functions, and any installed plugin function will work if called properly
 
 == Changelog ==
 
