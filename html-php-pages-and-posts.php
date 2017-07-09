@@ -3,7 +3,7 @@
 Plugin Name: Custom HTML/PHP Post Templates
 Plugin URI: http://www.github.com/stephenafamo/html-php-pages-and-posts
 Description: Use uploaded html or php files as templates for pages and posts.
-Version: 1.1.0
+Version: 2.0.0
 Author: Stephen Afam-Osemene
 Author URI: https://www.stephenafamo.com/
 License: GPL-2.0+

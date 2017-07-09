@@ -3,8 +3,8 @@ Contributors: stephenafamo
 Donate link: http://stephenafamo.com
 Tags: html, php, custom pages, custom templates, custom posts
 Requires at least: 3.0.1
-Tested up to: 4.7.1
-Stable tag: 1.1.0
+Tested up to: 4.8
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
